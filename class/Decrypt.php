@@ -8,8 +8,13 @@
  */
 class Decrypt {
 
+	/**
+	 * This function will filter the file "assets/wordlist" into "assets/filtered_wordlist"
+	 *
+	 *
+	 * @param $fileName <string> Path to the file wordlist
+	 */
 	public static function filterFile($fileName) {
-
 		if (file_exists($fileName)) {
 			$fileReader = fopen($fileName, "r");
 			var_dump(getcwd());
@@ -18,7 +23,6 @@ class Decrypt {
 			if ($fileReader && $fileWriter) {
 				ftruncate($fileWriter, 0);
 				while (($line = fgets($fileReader)) !== false) {
-					var_dump("Writing: " . $line);
 					if (SELF::isValid($line)) {
 						fwrite($fileWriter, $line);
 					}
@@ -35,11 +39,21 @@ class Decrypt {
 		}
 	}
 
+	/**
+	 * It will use the string "poultry outwits ants" to determinate
+	 * if a given word is potentially part of the secret phrase
+	 *
+	 * @param $str
+	 * @return int
+	 */
 	public static function isValid($str) {
 		return preg_match('/^[poultry outwits ants]*$/', $str);
 	}
 
-
+	/**
+	 * It will make combinations of 3 words to find the secret phrase
+	 *
+	 */
 	public static function combineFile() {
 		$reader1 = fopen("assets/filtered_wordlist", "r");
 		$reader2 = fopen("assets/filtered_wordlist", "r");
@@ -55,8 +69,7 @@ class Decrypt {
 
 						if (strlen($testSentence) == $anagramLenght) {
 							if (md5($testSentence) === '4624d200580677270a54ccff86b9610e') {
-								var_dump("Lo encontré, es: " . $testSentence);
-								mail("juan.preciado@gmail.com", "Done", $testSentence);
+								var_dump("Found it, it is: " . $testSentence);
 								die("here");
 							}
 						} else {
@@ -72,9 +85,9 @@ class Decrypt {
 			fclose($reader1);
 			fclose($reader2);
 			fclose($reader3);
-		}else {
-			print "Error opening files";
-			}
+		} else {
+			die ("Error opening files");
+		}
 
 
 	}
